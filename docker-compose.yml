@@ -1,0 +1,90 @@
+version: '3'
+
+services:
+  letsencrypt:
+    image: linuxserver/letsencrypt
+    restart: always
+    container_name: lemp_letsencrypt
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - URL={URL}
+      - SUBDOMAINS=portainer, pma
+      - VALIDATION=dns
+      - DNSPLUGIN=cloudflare
+      - EMAIL={EMAIL}
+      - DHLEVEL=4096
+    volumes:
+      - ./letsencrypt/:/config
+    restart: unless-stopped
+
+
+  nginx:
+    container_name: lemp_reverse_nginx
+    image: nginx
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx_reverse/conf/:/etc/nginx/
+      - ./nginx_reverse/log/:/var/log/nginx
+      - ./letsencrypt/etc/letsencrypt/archive/{URL}/:/etc/ssl/private/
+
+  portainer:
+    container_name: lemp_portainer
+    image: portainer/portainer
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./portainer/:/data
+    links:
+      - php-cgi
+
+  nginx_web:
+    container_name: lemp_nginx
+    image: nginx
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./public/:/var/www/
+      - ./nginx_web/conf/:/etc/nginx/
+      - ./nginx_web/log/:/var/log/nginx/
+    links:
+      - php-cgi
+
+  php-cgi:
+    image: php:7.4-fpm
+    container_name: lemp_php-cgi
+    restart: always
+    volumes:
+      - ./public/:/var/www/
+
+  mariadb:
+    image: mariadb
+    container_name: lemp_mariadb
+    volumes:
+      - ./mariadb/conf/:/etc/mysql/
+      - ./mariadb/lib/:/var/lib/mysql
+      - ./mariadb/log/:/var/log/mariadb/
+      - ./mysql/log/:/var/log/mysql/
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: lemp_pma
+    restart: always
+    links:
+      - mariadb
+    environment:
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8070:80
