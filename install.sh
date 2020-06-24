@@ -118,6 +118,8 @@ echo "    index index.php index.html;" >> ./nginx/conf/conf.d/default.conf
 echo "    server_name localhost;" >> ./nginx/conf/conf.d/default.conf
 echo "    error_log  /var/log/nginx/error.log;" >> ./nginx/conf/conf.d/default.conf
 echo "    access_log /var/log/nginx/access.log;" >> ./nginx/conf/conf.d/default.conf
+echo "" >> ./nginx/conf/conf.d/default.conf >> ./nginx/conf/conf.d/default.conf
+echo "    try_files $uri $uri/ /index.php?it=$uri&$args;"
 echo "" >> ./nginx/conf/conf.d/default.conf
 echo '    location ~ \.php$ {' >> ./nginx/conf/conf.d/default.conf
 echo '       try_files $uri =404;' >> ./nginx/conf/conf.d/default.conf
