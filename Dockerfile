@@ -13,8 +13,7 @@ RUN apt-get update && \
     apt-get install -y \
      zlib1g-dev
 
-RUN docker-php-ext-install mbstring
-RUN apt-get install -y libzip-dev
+
 RUN docker-php-ext-install zip
 
 RUN docker-php-ext-configure gd --with-gd --with-webp-dir --with-jpeg-dir \
