@@ -102,8 +102,6 @@ mkdir "./nginx/conf/"
 mkdir "./nginx/log/"
 mkdir "./public/"
 
-chmod -R 750 ./public/
-
 info "${WHITE}Starting ${YELLOW}configuration ${WHITE}for the nginx files..."
 docker create --name lemp_tmp1 nginx
 docker start lemp_tmp1
