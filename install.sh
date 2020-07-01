@@ -95,7 +95,15 @@ sed -i "s/{CF_TOKEN}/$token/g" ${FILE_COMPOSE}
 #
 info "${WHITE}Configuration of files ${YELLOW}${FILE_COMPOSE} & ${FILE_TRAEFIK} ${WHITE}done!"
 
-# This part creates the web directories
+# This part creates the web directories and configuration
+
+info "${WHITE}Creating ${YELLOW}apache2 directories ${WHITE}..."
+mkdir "./apache2"
+
+docker create --name lemp_tmp1
+docker start lemp_tmp1
+docker cp lemp_tmp1:/etc/apache2/. ./apache2/
+docker stop lemp_tmp1 && docker rm lemp_tmp1
 
 touch ./public/index.php
 echo "<?php" >> ./public/index.php
