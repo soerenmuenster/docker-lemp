@@ -6,7 +6,7 @@
 
 # Docker Lemp Scriptstack
 
-Docker, Traefik, NGINX Webserver, MariaDB, PHPMyAdmin, Mautic | LetsEncrypt + Extended security layer (htaccess)
+Docker, Traefik, Apache2 Webserver, MariaDB, PHPMyAdmin, Mautic | LetsEncrypt + Extended security layer (htaccess)
 
 ## Getting Started
 
@@ -75,7 +75,7 @@ pma.example.com <= phpMyAdmin
 mautic.example.com <= Mautic
 ```
 ```
-example.com <= NGINX Web-Server
+example.com <= Apache2 Web-Server
 ```
 ## Important information
 * !!! IMPORTANT !!! If the installation of the lemp stack is done, do not lose or delete the acme.json file. In this file Traefik saves all LetsEncrypt certificates. If you request certificates for your domain too often, LetsEncrypt will ban you for a week!
@@ -90,7 +90,7 @@ rm -rf {your_project_name}/mautic/web/app/cache/*
 * [Docker-Compose](https://www.docker.com/) - Docker Compose
 * [MariaDB](https://mariadb.org/) - MariaDB
 * [PHP](https://www.php.net/) - PHP
-* [Nginx](https://nginx.org/) - Nginx
+* [Apache2](https://httpd.apache.org/) - Nginx
 * [phpMyAdmin](https://www.phpmyadmin.net/) - phpMyAdmin
 * [Mautic](https://www.mautic.org/) - Mautic
 

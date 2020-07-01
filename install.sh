@@ -95,47 +95,12 @@ sed -i "s/{CF_TOKEN}/$token/g" ${FILE_COMPOSE}
 #
 info "${WHITE}Configuration of files ${YELLOW}${FILE_COMPOSE} & ${FILE_TRAEFIK} ${WHITE}done!"
 
-# This part creates the nginx directories and sets up the configuration
-info "${WHITE}Creating ${YELLOW}nginx directories${WHITE}..."
-mkdir "./nginx/"
-mkdir "./nginx/conf/"
-mkdir "./nginx/log/"
-mkdir "./public/"
-
-info "${WHITE}Starting ${YELLOW}configuration ${WHITE}for the nginx files..."
-docker create --name lemp_tmp1 nginx
-docker start lemp_tmp1
-docker cp lemp_tmp1:/etc/nginx/. ./nginx/conf/
-docker stop lemp_tmp1 && docker rm lemp_tmp1
-rm ./nginx/conf/conf.d/default.conf
-
-touch ./nginx/conf/conf.d/default.conf
-echo "server {" >> ./nginx/conf/conf.d/default.conf
-echo "    root /var/www/html/;" >> ./nginx/conf/conf.d/default.conf
-echo "    index index.php index.html;" >> ./nginx/conf/conf.d/default.conf
-echo "    server_name localhost;" >> ./nginx/conf/conf.d/default.conf
-echo "    error_log  /var/log/nginx/error.log;" >> ./nginx/conf/conf.d/default.conf
-echo "    access_log /var/log/nginx/access.log;" >> ./nginx/conf/conf.d/default.conf
-echo "" >> ./nginx/conf/conf.d/default.conf >> ./nginx/conf/conf.d/default.conf
-echo "    try_files $uri $uri/ /index.php?it=$uri&$args;"
-echo "" >> ./nginx/conf/conf.d/default.conf
-echo '    location ~ \.php$ {' >> ./nginx/conf/conf.d/default.conf
-echo '       try_files $uri =404;' >> ./nginx/conf/conf.d/default.conf
-echo '       fastcgi_split_path_info ^(.+\.php)(/.+)$;' >> ./nginx/conf/conf.d/default.conf
-echo "       fastcgi_pass php-cgi:9000;" >> ./nginx/conf/conf.d/default.conf
-echo "       fastcgi_index index.php;" >> ./nginx/conf/conf.d/default.conf
-echo "       include fastcgi_params;" >> ./nginx/conf/conf.d/default.conf
-echo '       fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;' >> ./nginx/conf/conf.d/default.conf
-echo '       fastcgi_param PATH_INFO $fastcgi_path_info;' >> ./nginx/conf/conf.d/default.conf
-echo "    }" >> ./nginx/conf/conf.d/default.conf
-echo "}" >> ./nginx/conf/conf.d/default.conf
+# This part creates the web directories
 
 touch ./public/index.php
 echo "<?php" >> ./public/index.php
 echo " phpinfo();" >> ./public/index.php
 echo "?>" >> ./public/index.php
-
-info "${WHITE}Configuration of the ${YELLOW}nginx files ${WHITE}is done!"
 #
 
 # This part creates the mariadb directories
@@ -188,9 +153,8 @@ docker network create traefik_default
 info "${WHITE}Starting ${YELLOW}reverse-proxy ${WHITE}container..."
 docker-compose up -d reverse-proxy
 
-info "${WHITE}Starting ${YELLOW}nginx & php-cgi ${WHITE}container..."
-docker-compose up -d php-cgi
-docker-compose up -d nginx
+info "${WHITE}Starting ${YELLOW}apache2 ${WHITE}container..."
+docker-compose up -d apache2
 
 info "${WHITE}Starting ${YELLOW}mariadb ${WHITE}container..."
 docker-compose up -d mariadb

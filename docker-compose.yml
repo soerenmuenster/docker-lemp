@@ -42,17 +42,7 @@ services:
       - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.{DOMAIN}"
       - "traefik.http.routers.traefik-secure.service=api@internal"
       - "traefik.docker.network=traefik_default"
-      
-  php-cgi:
-    build: './'
-    container_name: lemp_php-cgi
-    restart: unless-stopped
-    networks:
-      - backend
-    labels:
-      - "traefik.enable=false"
-    volumes:
-      - ./public/:/var/www/html/
+     
       
   mariadb:
     image: mariadb
@@ -124,28 +114,25 @@ services:
       - "traefik.port=80"
       - "traefik.docker.network=traefik_default"
 
-  nginx:
-    container_name: lemp_nginx
-    image: nginx
+  apache2:
+    container_name: lemp_apache2
+    build: './'
     restart: always
     volumes:
       - ./public/:/var/www/html/
-      - ./nginx/conf/:/etc/nginx/
-      - ./nginx/log/:/var/log/nginx/
     networks:
       - web
       - backend
     depends_on:
-      - php-cgi
       - mariadb
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.nginx.rule=Host(`{DOMAIN}`)"
-      - "traefik.http.routers.nginx.entrypoints=http"
-      - "traefik.http.routers.nginx.middlewares=traefik-https-redirect"
-      - "traefik.http.routers.nginx-secure.rule=Host(`{DOMAIN}`)"
-      - "traefik.http.routers.nginx-secure.entrypoints=https"
-      - "traefik.http.routers.nginx-secure.tls.certresolver=cloudflare"
+      - "traefik.http.routers.apache2.rule=Host(`{DOMAIN}`)"
+      - "traefik.http.routers.apache2.entrypoints=http"
+      - "traefik.http.routers.apache2.middlewares=traefik-https-redirect"
+      - "traefik.http.routers.apache2-secure.rule=Host(`{DOMAIN}`)"
+      - "traefik.http.routers.apache2-secure.entrypoints=https"
+      - "traefik.http.routers.apache2-secure.tls.certresolver=cloudflare"
       - "traefik.docker.network=traefik_default"
 
 networks:
