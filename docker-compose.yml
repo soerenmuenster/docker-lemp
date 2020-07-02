@@ -120,6 +120,7 @@ services:
     restart: always
     volumes:
       - ./public/:/var/www/html/
+      - ./apache2/:/etc/apache2/
     networks:
       - web
       - backend
