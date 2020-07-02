@@ -101,7 +101,7 @@ info "${WHITE}Creating ${YELLOW}apache2 directories ${WHITE}..."
 mkdir "./apache2"
 mkdir "./public"
 
-docker create --name lemp_tmp1
+docker create --name lemp_tmp1 php:apache
 docker start lemp_tmp1
 docker cp lemp_tmp1:/etc/apache2/. ./apache2/
 docker stop lemp_tmp1 && docker rm lemp_tmp1
