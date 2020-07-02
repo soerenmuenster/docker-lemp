@@ -99,6 +99,7 @@ info "${WHITE}Configuration of files ${YELLOW}${FILE_COMPOSE} & ${FILE_TRAEFIK} 
 
 info "${WHITE}Creating ${YELLOW}apache2 directories ${WHITE}..."
 mkdir "./apache2"
+mkdir "./public"
 
 docker create --name lemp_tmp1
 docker start lemp_tmp1
